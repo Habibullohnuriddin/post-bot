@@ -14,8 +14,8 @@ bot.start(async (ctx) => {
 
 bot.on("callback_query", async (ctx) => {
   try {
-    // ctx.answerCbQuery(); // Tugmachani bosganda izoh berish va hatolarni oldini oladi
-    // ctx.deleteMessage(); // Oldingi xabarni o'chiradi
+    ctx.answerCbQuery(); // Tugmachani bosganda izoh berish va hatolarni oldini oladi
+    ctx.deleteMessage(); // Oldingi xabarni o'chiradi
 
     const current_user = await personModel
       .findOne({ id: ctx.from.id })
