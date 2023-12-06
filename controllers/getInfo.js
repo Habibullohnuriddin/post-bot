@@ -68,6 +68,7 @@ const getInfo = async (existingUser, ctx) => {
       );
 
     case 7:
+      console.log(ctx.message);
       if (existingUser.step === 7 && ctx.message.location) {
         const locationString = `Latitude: ${ctx.message.location.latitude}, Longitude: ${ctx.message.location.longitude}`;
         existingUser.moljal = locationString;
@@ -79,13 +80,13 @@ const getInfo = async (existingUser, ctx) => {
         await existingUser.save();
         await ctx.telegram.sendMessage(
           process.env.SENDER_TO_CHANEL,
-`<b> Жаназа вақти:</b> ${existingUser.janazaVaqti}\n
-<b>Манзил:</b> ${existingUser.manzil}\n
-<b>Марҳум ҳақида:</b> ${existingUser.mayitningMalumoti}\n
-<b>Фарзандларининг исми:</b> ${existingUser.farzandlariningIsmi}\n
-<b>Жаназа вақти:</b> ${existingUser.janazaVaqti}\n
-<b>Қабристон номи:</b> ${existingUser.qabristonNomi}\n
-<b>Мўлжал:</b> ${existingUser.moljal}\n
+          `${existingUser.janazaVaqti}\n
+${existingUser.manzil}\n
+${existingUser.mayitningMalumoti}\n
+${existingUser.farzandlariningIsmi}\n
+${existingUser.janazaVaqti}\n
+${existingUser.qabristonNomi}\n
+${existingUser.moljal}\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•\n
 Иннаа лиллаахи ва иннаа илайҳи рожиъун\n
 @janozachust
@@ -97,7 +98,7 @@ const getInfo = async (existingUser, ctx) => {
       }
 
       await personModel.findOneAndDelete({ id: existingUser.id });
-      // return ctx.replyWithHTML("Aллоҳ сизга сабр-у жамил ато қилсин!");
+    // return ctx.replyWithHTML("Aллоҳ сизга сабр-у жамил ато қилсин!");
 
     default:
       return ctx.reply("❗️ Хатолик дефаулт");
