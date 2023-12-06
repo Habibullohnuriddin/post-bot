@@ -1,0 +1,310 @@
+const personModel = require("../models/personModel");
+
+// Vaqtni tekshirish funktsiyasi
+function isValidTimeFormat(time) {
+  // Regex orqali vaqt formatini tekshiramiz (24 soatlik format)
+  const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+  return timeRegex.test(time);
+}
+
+const getInfo = async (existingUser, ctx) => {
+  if (!existingUser) {
+    existingUser = new personModel({ id: ctx.from.id });
+    await existingUser.save();
+  }
+
+  let text = ctx.message?.text;
+
+  switch (existingUser.step) {
+    case 0:
+      existingUser.step = 1;
+      await existingUser.save();
+      const ism = await ctx.replyWithHTML(
+        "<strong>1. Marhumning ismini kiriting</strong>"
+      );
+      console.log(ism);
+      return ism;
+
+    case 1:
+      existingUser.step = 2;
+      existingUser.firstname = text;
+      await existingUser.save();
+      return ctx.replyWithHTML(
+        "<strong>2. Marhumning familiyasini kiriting</strong>"
+      );
+
+    case 2:
+      existingUser.step = 3;
+      existingUser.lastname = text;
+      await existingUser.save();
+      return ctx.replyWithHTML(
+        `<strong>3. Marhumning tug'ilgan sanasi kiriting</strong>`
+      );
+
+    case 3:
+      if (isNaN(text))
+        return ctx.replyWithHTML(
+          "⚠️ <strong>Noto'g'ri format.</strong> \n\nIltimos yoshingizni son bilan kiriting!"
+        );
+      existingUser.step = 4;
+      existingUser.birth = text;
+      await existingUser.save();
+      return ctx.replyWithHTML(
+        `<strong>4. Marhumning manzilini kiriting</strong>`
+      );
+
+    case 4:
+      existingUser.step = 5;
+      existingUser.address = text;
+      await existingUser.save();
+      return ctx.replyWithHTML(
+        `<strong>5. Marhumning janazasi o'qiladigan manzilni kiriting</strong>`
+      );
+
+    case 5:
+      existingUser.step = 6;
+      existingUser.fixedAddress = text;
+      await existingUser.save();
+      return ctx.replyWithHTML(
+        `<strong>6. Marhumning janazasi o'qiladigan manzil uchun 'ориентир' kiriting</strong>`
+      );
+
+    case 6:
+      existingUser.step = 7;
+      existingUser.approximateDestination = text;
+      await existingUser.save();
+      return ctx.replyWithHTML(
+        `<strong>7. Marhumning janazasi o'qiladigan vaqtni kiriting</strong>`
+      );
+
+    case 7:
+      if (!isValidTimeFormat(text)) {
+        return ctx.replyWithHTML(
+          "⚠️ <strong>Noto'g'ri vaqt formati.</strong> \n\nIltimos to'g'ri vaqt formatini kiriting! (Masalan: 18:30)"
+        );
+      }
+      existingUser.step = 8;
+      existingUser.funeralTime = text;
+      await existingUser.save();
+      return ctx.replyWithHTML(
+        `<strong>8. Marhumning rasmini kiriting</strong>`
+      );
+
+    // case 8:
+    //   existingUser.step = 7;
+    //   existingUser.picture = text;
+    //   console.log(text);
+    //   await existingUser.save();
+    //   const photoId = ctx.message.photo;
+    //   console.log(photoId);
+
+    default:
+      return ctx.reply("❗️ Xatolik default");
+  }
+};
+
+module.exports = { getInfo };
+
+
+=-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=
+
+
+function isValidTimeFormat(time) {
+  const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+  return timeRegex.test(time);
+}
+
+
+case 7:
+      if (!isValidTimeFormat(ctx.message.text)) {
+        return ctx.replyWithHTML("⚠️ <strong>Noto'g'ri vaqt formati.</strong> \n\nIltimos to'g'ri vaqt formatini kiriting! (Masalan: 18:30)");
+      }
+      return saveAndReply(existingUser, ctx, 8, `<strong>8. Marhumning rasmini kiriting</strong>`);
+
+
+
+
+=-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=
+
+bot.on("photo", async (ctx) => {
+  const user_id = ctx.from.id;
+  const current_user = await personModel.findOne({ id: user_id });
+
+  try {
+    // rasm faylini identifikator (file_id) orqali oling
+    const fileId = ctx.message.photo[0].file_id;
+    const photoUrl = await bot.telegram.getFileLink(fileId);
+
+    // Ma'lumotlarni o'zgartiramiz
+    current_user.picture = photoUrl.href;
+    await current_user.save();
+
+    // Malumotlarni rasmli postga joylash
+    const postText = `
+      <em>• Marhum haqida ma'lumot</em>\n
+      2. Ismi: <strong>${current_user.firstname}</strong>
+      3. Familiyasi: <strong>${current_user.lastname}</strong>
+      4. Tug'ilgan sanasi: <strong>${current_user.age}</strong>
+      5. Manzili: <strong>${current_user.address}</strong>
+      6. Nomeri: <strong>${current_user.birth}</strong>
+      7. Qayerdan topgani: <strong>${current_user.fixedAddress}</strong>
+      8. Kompyuteri bormi: <strong>${current_user.approximateDestination}</strong>
+      9. Internetga ulanganmi: <strong>${current_user.funeralTime}</strong>
+    `;
+
+    ctx.telegram.sendPhoto(
+      "@codingfoundation", // Replace with your channel username
+      { source: current_user.picture },
+      {
+        caption: postText,
+        parse_mode: "HTML",
+      }
+    );
+
+    ctx.reply(`Aллоҳ марҳумларимизни ўз раҳматига олсин, Aмин 🤲`);
+
+    await resetUserData(user_id);
+  } catch (error) {
+    console.log("❗️ photo", error);
+  }
+});
+
+
+=-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=
+
+const personModel = require("../models/personModel");
+
+const saveAndReply = async (existingUser, ctx, nextStep, replyText) => {
+  existingUser.step = nextStep;
+  await existingUser.save();
+  return ctx.replyWithHTML(replyText);
+};
+
+const getInfo = async (existingUser, ctx) => {
+  if (!existingUser) {
+    existingUser = new personModel({ id: ctx.from.id });
+    await existingUser.save();
+  }
+
+  switch (existingUser.step) {
+    case 0:
+      // No need to check text in this case
+      return saveAndReply(
+        existingUser,
+        ctx,
+        1,
+        "<strong>1. Жаназа вақтини киритинг! \n\n<b>Мисол учун:</b> 21.04.2023 Жума</strong>"
+      );
+
+    case 1:
+      return saveAndReply(
+        existingUser,
+        ctx,
+        2,
+        "<strong>2. Манзилни киритинг! \n\n<b>Мисол учун:</b> Олмазор МФЙ, Яшнобод кўча 1-уй</strong>"
+      );
+
+    case 2:
+      return saveAndReply(
+        existingUser,
+        ctx,
+        3,
+        `<strong>3. . Майитнинг исми фамилияси ва касбини киритинг! \n\n<b>Мисол учун:</b> Еркак киши бўлса: Қаюмов Ахаджон (1970-йил, тадбиркор) акани жанозалари бор
+\n\nAёл киши бўлса: Қаюмов Ахаджон акани аёллари Қаюмова Малохатжон (1970-йил, тадбиркор) аяни жанозалари бор</strong>`
+      );
+
+    case 3:
+      return saveAndReply(
+        existingUser,
+        ctx,
+        4,
+        `<strong>4. Фарзандларининг исмини киритинг!</strong> \n\n<b>Мисол учун:</b> Фарзандлари: Қаюмов Авазбек, Aзизова Салима`
+      );
+
+    case 4:
+      return saveAndReply(
+        existingUser,
+        ctx,
+        5,
+        `<strong>5. Жаноза ўқилиш вақти ва жойини киритинг!</strong> \n\n<b>Мисол учун:</b> Жаноза «Каттабоғ» (Садача масжиди) жоме масжидида Жума (13:00) намозидан кейин ўқилади
+`
+      );
+
+    case 5:
+      return saveAndReply(
+        existingUser,
+        ctx,
+        6,
+        `<strong>6. Қайси қабристонга қўйилишини киритинг!</strong> \n\n<b>Мисол учун:</b> Дафн: Садача қабристонида`
+      );
+
+    case 6:
+      return saveAndReply(
+        existingUser,
+        ctx,
+        7,
+        `<strong>7. Осон топишлик учун мўлжални киритинг!</strong> \n\n<b>Мисол учун:</b> Барён завод рўпарасида`,
+
+        ctx.telegram.sendMessage(
+          process.env.SENDER_ID_ADDRESS,
+          `
+1. Janaza vaqti: <strong>@${existingUser.janazaVaqti}</strong>
+2. Manzil: <strong>${existingUser.manzil}</strong>
+3. Marhum haqida: <strong>${existingUser.mayitningMalumoti}</strong>
+4. Farzandlarining ismi: <strong>${existingUser.farzandlariningIsmi}</strong>
+5. Janaza vaqti: <strong>${existingUser.janazaVaqti}</strong>
+6. Qabriston nomi: <strong>${existingUser.qabristonNomi}</strong>
+7. Mo'ljal: <strong>${existingUser.moljal}</strong>
+                `,
+          { parse_mode: "HTML" }
+        )
+      );
+
+    // default:
+    //   return ctx.reply("❗️ Xatolik default");
+  }
+};
+
+module.exports = { getInfo };
+
+
+
+===============================================================================================
+
+if (isNaN(ctx.message.text)) {
+        return ctx.replyWithHTML(
+          "⚠️ <strong>Noto'g'ri format.</strong> \n\nIltimos yoshingizni son bilan kiriting!"
+        );
+      }
+
+
+
+
+
+
+
+
+
+
+
+      // reply_markup: {
+          //   inline_keyboard: [
+          //     [
+          //       { text: "Тўғри", callback_data: "correct" },
+          //       { text: "Нотўғри", callback_data: "wrong" },
+          //     ],
+          //   ],
+          // },
+
+
+
+      console.log(ctx);
+      if (ctx.callbackQuery.response === "correct") {
+        await ctx.reply("✅ Малумотлар тасдиқланди");
+      } else if (ctx.callbackQuery.response === "wrong") {
+        existingUser.step = 0;
+        await existingUser.save();
+        ctx.reply("⚠️ Малумотларни қайтадан киритинг");
+      } else {
+        await ctx.reply("❗️ Маълумот олишда хатолик");
+      }
