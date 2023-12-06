@@ -1,4 +1,3 @@
-const { bot } = require("../core/bot");
 const personModel = require("../models/personModel");
 
 const getInfo = async (existingUser, ctx) => {
@@ -64,23 +63,16 @@ const getInfo = async (existingUser, ctx) => {
       existingUser.qabristonNomi = text;
       await existingUser.save();
       return ctx.replyWithHTML(
-        `<b>7. Осон топишлик учун мўлжални киритинг ёки телеграмдан локация жўнатинг! \n\nМисол учун:</b> Барён завод рўпарасида`
+        `<b>7. Осон топишлик учун мўлжални киритинг! \n\nМисол учун:</b> Барён завод рўпарасида`
       );
 
     case 7:
-      console.log(ctx.message);
-      if (existingUser.step === 7 && ctx.message.location) {
-        const locationString = `Latitude: ${ctx.message.location.latitude}, Longitude: ${ctx.message.location.longitude}`;
-        existingUser.moljal = locationString;
-        existingUser.step = 8;
-        await existingUser.save();
-      } else {
-        existingUser.moljal = text;
-        existingUser.step = 8;
-        await existingUser.save();
-        await ctx.telegram.sendMessage(
-          process.env.SENDER_TO_CHANEL,
-          `${existingUser.janazaVaqti}\n
+      existingUser.step = 8;
+      existingUser.moljal = text;
+      await existingUser.save();
+      await ctx.telegram.sendMessage(
+        process.env.SENDER_TO_CHANEL,
+        `${existingUser.janazaVaqti}\n
 ${existingUser.manzil}\n
 ${existingUser.mayitningMalumoti}\n
 ${existingUser.farzandlariningIsmi}\n
@@ -91,11 +83,10 @@ ${existingUser.moljal}\n
 Иннаа лиллаахи ва иннаа илайҳи рожиъун\n
 @janozachust
           `,
-          {
-            parse_mode: "HTML",
-          }
-        );
-      }
+        {
+          parse_mode: "HTML",
+        }
+      );
 
       await personModel.findOneAndDelete({ id: existingUser.id });
     // return ctx.replyWithHTML("Aллоҳ сизга сабр-у жамил ато қилсин!");
