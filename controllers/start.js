@@ -1,13 +1,19 @@
 const { bot } = require("../core/bot");
-const { inline_keyboard } = require("../lib/keyboards");
+const { tayyorman } = require("../lib/keyboards");
 const { message } = require("../lib/messages");
 const personModel = require("../models/personModel");
 const { getInfo } = require("./getInfo");
 
 bot.start(async (ctx) => {
+  console.log(ctx.message.text);
+
+  if (ctx.message.text === "/start") {
+    await personModel.findOneAndDelete({ id: ctx.from.id });
+  }
+
   await ctx.replyWithHTML(message(ctx), {
     reply_markup: {
-      inline_keyboard: inline_keyboard,
+      inline_keyboard: tayyorman,
     },
   });
 });

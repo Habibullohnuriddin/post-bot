@@ -16,7 +16,7 @@ const personModel = new mongoose.Schema({
     type: String,
   },
 
-  janazaVaqti: {
+  joriySana: {
     type: String,
   },
 

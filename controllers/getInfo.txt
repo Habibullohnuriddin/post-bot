@@ -308,3 +308,7 @@ if (isNaN(ctx.message.text)) {
       } else {
         await ctx.reply("❗️ Маълумот олишда хатолик");
       }
+
+
+
+      // return ctx.replyWithHTML("Aллоҳ сизга сабр-у жамил ато қилсин!");
