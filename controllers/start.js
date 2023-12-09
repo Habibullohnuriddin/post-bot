@@ -1,5 +1,5 @@
 const { bot } = require("../core/bot");
-const { tayyorman } = require("../lib/keyboards");
+const { isReady } = require("../lib/keyboards");
 const { message } = require("../lib/messages");
 const personModel = require("../models/personModel");
 const { getInfo } = require("./getInfo");
@@ -13,7 +13,7 @@ bot.start(async (ctx) => {
 
   await ctx.replyWithHTML(message(ctx), {
     reply_markup: {
-      inline_keyboard: tayyorman,
+      inline_keyboard: isReady,
     },
   });
 });
