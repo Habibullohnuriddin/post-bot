@@ -88,10 +88,13 @@ const getInfo = async (existingUser, ctx) => {
 <b>Жаноза вақти, ўқилиш жойи:</b>\n${existingUser.janazaVaqti}\n
 <b>Қайси Қабристонга дафн этилади?:</b>\n${existingUser.qabristonNomi}\n
 <b>Мўлжал:</b>\n${existingUser.moljal}\n
-<b>ЖАНОЗА ЭЪЛОНИНИ ЯҚИНЛАРИНГИЗГА ҲАМ УЛАШИНГ!</b>
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
 Инна лиллаҳи ва инна илайҳи рожиун\n
-@janozachust`,
+Ⓜ️ | Гуруҳ 👉 @janozachust
+📃 | Эълон 👉 @janozachustbot
+👤 | Админ 👉 @janoza_info_bot\n
+<b>ЖАНОЗА ЭЪЛОНИНИ ЯҚИНЛАРИНГИЗГА ҲАМ УЛАШИНГ!</b>
+`,
           { parse_mode: "HTML" }
         );
         ctx.replyWithHTML(
