@@ -5,7 +5,8 @@ const getInfo = async (existingUser, ctx) => {
     existingUser = new personModel({ id: ctx.from.id });
     await existingUser.save();
   }
-
+  const username = ctx.message.from.username || null;
+  console.log(username);
   // Hozirgi sanani olish
   const currentDate = new Date();
   const currentDateString = currentDate
@@ -81,15 +82,16 @@ const getInfo = async (existingUser, ctx) => {
         await existingUser.save();
         await ctx.telegram.sendMessage(
           process.env.SENDER_TO_CHANEL,
-          `ЖАНОЗА ЭЪЛОНИ #№___ \n\n${existingUser.joriySana}\n
-Манзил:\n<b>${existingUser.manzil}\n</b>
-Марҳум(а) ҳақида:\n<b>${existingUser.mayitningMalumoti}\n</b>
-Фарзандлари:\n<b>${existingUser.farzandlariningIsmi}\n</b>
-Жаноза вақти, ўқилиш жойи:\n<b>${existingUser.janazaVaqti}\n</b>
-Дафн:\n<b>${existingUser.qabristonNomi}\n</b>
-Мўлжал (уйлари):\n<b>${existingUser.moljal}\n</b>
+          `<b>ЖАНОЗА ЭЪЛОНИ #№___ \n${currentDateString}\n</b>
+\n<b>${existingUser.manzil}</b>\n
+\n<b>${existingUser.mayitningMalumoti}</b>\n
+\n${existingUser.farzandlariningIsmi}\n
+\n${existingUser.janazaVaqti}\n
+Дафн:\n${existingUser.qabristonNomi}\n
+Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
-Инна лиллаҳи ва инна илайҳи рожиун\n\n Яқинларингизга ҳам улашинг! Эълон бериш 👉 @janozachustbot
+Инна лиллаҳи ва инна илайҳи рожиун\n\n <b>Яқинларингизга ҳам улашинг!</b>\nОбуна бўлинг 👉 @janozachust
+
 `,
           { parse_mode: "HTML" }
         );
