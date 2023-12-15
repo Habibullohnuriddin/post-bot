@@ -10,10 +10,11 @@ const getInfo = async (existingUser, ctx) => {
   const userLink = username
     ? `@${username}`
     : `[${ctx.from.first_name}](tg://user?id=${ctx.from.id})`;
+  const userLinkToSend = username ? `@${username}` : existingUser.userLink;
 
   existingUser.username = username;
-  existingUser.userLink = userLink; // existingUser ga usernameni saqlash
-  await existingUser.save(); // existingUser ni saqlash
+  existingUser.userLink = userLink;
+  await existingUser.save();
 
   // Hozirgi sanani olish
   const currentDate = new Date();
@@ -99,7 +100,7 @@ const getInfo = async (existingUser, ctx) => {
 Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
 Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\nОбуна бўлинг 👉 @janozachust
-\n<i>User: @${username}</i>
+\n<i>User: @${userLinkToSend}</i>
 `,
           { parse_mode: "HTML" }
         );
