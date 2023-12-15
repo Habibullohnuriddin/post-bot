@@ -5,9 +5,14 @@ const getInfo = async (existingUser, ctx) => {
     existingUser = new personModel({ id: ctx.from.id });
     await existingUser.save();
   }
-  
+
   const username = ctx.message.from.username || null;
-  existingUser.username = username; // existingUser ga usernameni saqlash
+  const userLink = username
+    ? `@${username}`
+    : `[${ctx.from.first_name}](tg://user?id=${ctx.from.id})`;
+
+  existingUser.username = username;
+  existingUser.userLink = userLink; // existingUser ga usernameni saqlash
   await existingUser.save(); // existingUser ni saqlash
 
   // Hozirgi sanani olish
@@ -94,7 +99,7 @@ const getInfo = async (existingUser, ctx) => {
 Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
 Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\nОбуна бўлинг 👉 @janozachust
-<i>User: ${username}</i>
+\n<i>User: @${username}</i>
 `,
           { parse_mode: "HTML" }
         );
