@@ -6,7 +6,7 @@ const getInfo = async (existingUser, ctx) => {
     await existingUser.save();
   }
   const username = ctx.message.from.username || null;
-  console.log(username);
+
   // Hozirgi sanani olish
   const currentDate = new Date();
   const currentDateString = currentDate
@@ -90,8 +90,8 @@ const getInfo = async (existingUser, ctx) => {
 Дафн:\n${existingUser.qabristonNomi}\n
 Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
-Инна лиллаҳи ва инна илайҳи рожиун\n\n <b>Яқинларингизга ҳам улашинг!</b>\nОбуна бўлинг 👉 @janozachust
-
+Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\nОбуна бўлинг 👉 @janozachust
+<i>User: ${username}</i>
 `,
           { parse_mode: "HTML" }
         );
