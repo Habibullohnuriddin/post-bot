@@ -5,7 +5,10 @@ const getInfo = async (existingUser, ctx) => {
     existingUser = new personModel({ id: ctx.from.id });
     await existingUser.save();
   }
+  
   const username = ctx.message.from.username || null;
+  existingUser.username = username; // existingUser ga usernameni saqlash
+  await existingUser.save(); // existingUser ni saqlash
 
   // Hozirgi sanani olish
   const currentDate = new Date();
@@ -82,11 +85,11 @@ const getInfo = async (existingUser, ctx) => {
         await existingUser.save();
         await ctx.telegram.sendMessage(
           process.env.SENDER_TO_CHANEL,
-          `<b>ЖАНОЗА ЭЪЛОНИ #№___ \n${currentDateString}\n</b>
+          `<b>ЖАНОЗА ЭЪЛОНИ #№\n${existingUser.joriySana}\n</b>
 \n<b>${existingUser.manzil}</b>\n
 \n<b>${existingUser.mayitningMalumoti}</b>\n
 \n${existingUser.farzandlariningIsmi}\n
-\n${existingUser.janazaVaqti}\n
+<b>\n${existingUser.janazaVaqti}\n</b>
 Дафн:\n${existingUser.qabristonNomi}\n
 Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
