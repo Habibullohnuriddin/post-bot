@@ -23,11 +23,10 @@ bot.on("callback_query", async (ctx) => {
     ctx.answerCbQuery(); // Tugmachani bosganda izoh berish va hatolarni oldini oladi
     ctx.deleteMessage(); // Oldingi xabarni o'chiradi
 
-    const current_user = await personModel
-      .findOne({ id: ctx.from.id })
-      .maxTimeMS(30000); // Set timeout to 30 seconds;
+    const current_user = await personModel.findOne({ id: ctx.from.id });
+    // .maxTimeMS(30000); // Set timeout to 30 seconds;
 
-    // console.log("Hozirgi Foydalanuvchi:", current_user);
+    console.log("Hozirgi Foydalanuvchi:", current_user);
 
     await getInfo(current_user, ctx);
   } catch (error) {
