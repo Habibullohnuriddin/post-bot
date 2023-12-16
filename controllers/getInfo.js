@@ -1,30 +1,32 @@
 const personModel = require("../models/personModel");
 
 const getInfo = async (existingUser, ctx) => {
-  if (!existingUser) {
+  if (!existingUser || existingUser === null) {
     existingUser = new personModel({ id: ctx.from.id });
     await existingUser.save();
   }
 
-  const username = ctx.message.from.username || null;
-  const userLink = username
-    ? `@${username}`
-    : `[${ctx.from.first_name}](tg://user?id=${ctx.from.id})`;
-  const userLinkToSend = username ? `@${username}` : existingUser.userLink;
+  const username = ctx.from.username;
+  const userLinkToSend = username ? `${username}` : ctx.from.first_name;
+  const userLink = username ? `${username}` : `[${ctx.from.first_name}](tg://user?id=${ctx.from.id})`;
 
+
+
+  // Userni malumotlarini yangilash
   existingUser.username = username;
   existingUser.userLink = userLink;
+  existingUser.userLinkToSend = userLinkToSend;
   await existingUser.save();
 
-  // Hozirgi sanani olish
-  const currentDate = new Date();
-  const currentDateString = currentDate
-    .toLocaleDateString("uz-UZ", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-    })
-    .replace(/\//g, ".");
+  // // Hozirgi sanani olish
+  // const currentDate = new Date();
+  // const currentDateString = currentDate
+  //   .toLocaleDateString("uz-UZ", {
+  //     year: "numeric",
+  //     month: "numeric",
+  //     day: "numeric",
+  //   })
+  //   .replace(/\//g, ".");
 
   let text =
     ctx.message && ctx.message.text ? ctx.message.text : "⚠️ Ma'lumot yo'q";
