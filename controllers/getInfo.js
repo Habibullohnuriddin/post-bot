@@ -7,26 +7,8 @@ const getInfo = async (existingUser, ctx) => {
   }
 
   const username = ctx.from.username;
-  const userLinkToSend = username ? `${username}` : ctx.from.first_name;
-  const userLink = username ? `${username}` : `[${ctx.from.first_name}](tg://user?id=${ctx.from.id})`;
-
-
-
-  // Userni malumotlarini yangilash
   existingUser.username = username;
-  existingUser.userLink = userLink;
-  existingUser.userLinkToSend = userLinkToSend;
   await existingUser.save();
-
-  // // Hozirgi sanani olish
-  // const currentDate = new Date();
-  // const currentDateString = currentDate
-  //   .toLocaleDateString("uz-UZ", {
-  //     year: "numeric",
-  //     month: "numeric",
-  //     day: "numeric",
-  //   })
-  //   .replace(/\//g, ".");
 
   let text =
     ctx.message && ctx.message.text ? ctx.message.text : "⚠️ Ma'lumot yo'q";
@@ -102,7 +84,7 @@ const getInfo = async (existingUser, ctx) => {
 Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
 Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\nОбуна бўлинг 👉 @janozachust
-\n<i>User: @${userLinkToSend}</i>
+\n<i>User: @${username}</i>
 `,
           { parse_mode: "HTML" }
         );

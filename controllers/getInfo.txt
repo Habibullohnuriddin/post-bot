@@ -312,3 +312,15 @@ if (isNaN(ctx.message.text)) {
 
 
       // return ctx.replyWithHTML("Aллоҳ сизга сабр-у жамил ато қилсин!");
+
+============================================================================================================================
+
+  // Hozirgi sanani olish
+  const currentDate = new Date();
+  const currentDateString = currentDate
+    .toLocaleDateString("uz-UZ", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    })
+    .replace(/\//g, ".");
