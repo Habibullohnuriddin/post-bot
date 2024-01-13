@@ -6,6 +6,8 @@ const getInfo = async (existingUser, ctx) => {
     await existingUser.save();
   }
 
+
+
   const username = ctx.from.username;
   existingUser.username = username;
   await existingUser.save();
@@ -83,7 +85,7 @@ const getInfo = async (existingUser, ctx) => {
 Дафн:\n${existingUser.qabristonNomi}\n
 Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
-Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\n<b>Яқинларингизга ҳам улашинг!</b>\n Эълон бериш 👉 @janozachustbot \nОбуна бўлинг 👉 @janozachust
+Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\n Эълон бериш 👉 @janozachustbot \nОбуна бўлинг 👉 @janozachust
 \n<i>User: @${username}</i>
 `,
           { parse_mode: "HTML" }
