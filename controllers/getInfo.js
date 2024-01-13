@@ -75,7 +75,7 @@ const getInfo = async (existingUser, ctx) => {
         await existingUser.save();
         await ctx.telegram.sendMessage(
           process.env.SENDER_TO_CHANEL,
-          `<b>ЖАНОЗА ЭЪЛОНИ #№\n${existingUser.joriySana}\n</b>
+          `<b>ЖАНОЗА ЭЪЛОНИ №\n${existingUser.joriySana}\n</b>
 \n<b>${existingUser.manzil}</b>\n
 \n<b>${existingUser.mayitningMalumoti}</b>\n
 \n${existingUser.farzandlariningIsmi}\n
@@ -83,7 +83,7 @@ const getInfo = async (existingUser, ctx) => {
 Дафн:\n${existingUser.qabristonNomi}\n
 Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
-Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\nОбуна бўлинг 👉 @janozachust
+Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\n<b>Яқинларингизга ҳам улашинг!</b>\n Эълон бериш 👉 @janozachustbot \nОбуна бўлинг 👉 @janozachust
 \n<i>User: @${username}</i>
 `,
           { parse_mode: "HTML" }
