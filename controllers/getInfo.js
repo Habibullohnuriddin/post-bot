@@ -95,7 +95,7 @@ const getInfo = async (existingUser, ctx) => {
         break;
 
       default:
-        return ctx.reply("❗️ Хатолик дефаулт");
+        return ctx.reply("❗️ Хатолик: админга мурожаат қилинг 👉 @ahrorivaliy");
     }
   } catch (error) {
     console.log("❗️ Switch", error);
