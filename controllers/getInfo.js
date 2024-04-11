@@ -7,6 +7,12 @@ const getInfo = async (existingUser, ctx) => {
   }
 
   const username = ctx.from.username;
+  const first_name = ctx.from.first_name;
+  const userId = ctx.from.id;
+  const customUsername = username
+    ? `[${username}](tg://user?id=${userId})`
+    : `[${firstName}](tg://user?id=${userId})`;
+
   existingUser.username = username;
   await existingUser.save();
 
@@ -73,10 +79,19 @@ const getInfo = async (existingUser, ctx) => {
         existingUser.step = 8;
         existingUser.moljal = text;
         await existingUser.save();
+
+        await ctx.telegram.sendMessage(
+          process.env.SENDER_TO_CHANEL,
+          `${customUsername}`,
+          {
+            parse_mode: "markdown",
+          }
+        );
+
         await ctx.telegram.sendMessage(
           process.env.SENDER_TO_CHANEL,
           `<b>ЖАНОЗА ЭЪЛОНИ №\n${existingUser.joriySana}\n</b>
-\n<b>${existingUser.manzil}</b>\n
+\n<b>${existingUser.manzil}</ƒb>\n
 \n<b>${existingUser.mayitningMalumoti}</b>\n
 \n${existingUser.farzandlariningIsmi}\n
 <b>\n${existingUser.janazaVaqti}\n</b>
@@ -84,7 +99,6 @@ const getInfo = async (existingUser, ctx) => {
 Мўлжал (уйлари):\n<b>${existingUser.moljal}</b>\n
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
 Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\nЭълон бериш 👉 @janozachustbot \nОбуна бўлинг 👉 @janozachust
-\n<i>User: @${username}</i>
 `,
           { parse_mode: "HTML" }
         );
@@ -95,7 +109,9 @@ const getInfo = async (existingUser, ctx) => {
         break;
 
       default:
-        return ctx.reply("❗️ Хатолик: админга мурожаат қилинг 👉 @ahrorivaliy");
+        return ctx.reply(
+          "❗️ Хатолик: админга мурожаат қилинг 👉 @ahrorivaliy"
+        );
     }
   } catch (error) {
     console.log("❗️ Switch", error);
