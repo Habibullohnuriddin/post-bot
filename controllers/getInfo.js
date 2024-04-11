@@ -91,7 +91,7 @@ const getInfo = async (existingUser, ctx) => {
         await ctx.telegram.sendMessage(
           process.env.SENDER_TO_CHANEL,
           `<b>ЖАНОЗА ЭЪЛОНИ №\n${existingUser.joriySana}\n</b>
-\n<b>${existingUser.manzil}</ƒb>\n
+\n<ƒb>${existingUser.manzil}</b>\n
 \n<b>${existingUser.mayitningMalumoti}</b>\n
 \n${existingUser.farzandlariningIsmi}\n
 <b>\n${existingUser.janazaVaqti}\n</b>
