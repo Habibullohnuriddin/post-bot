@@ -7,11 +7,11 @@ const getInfo = async (existingUser, ctx) => {
   }
 
   const username = ctx.from.username;
-  // const firstName = ctx.from.first_name;
-  // const userId = ctx.from.id;
-  // const customUsername = username
-  //   ? `Username: [${username}](tg://user?id=${userId})`
-  //   : `Username: [${firstName}](tg://user?id=${userId})`;
+  const firstName = ctx.from.first_name;
+  const userId = ctx.from.id;
+  const customUsername = username
+    ? `Username: [${username}](tg://user?id=${userId})`
+    : `Username: [${firstName}](tg://user?id=${userId})`;
 
   existingUser.username = username;
   await existingUser.save();
@@ -92,21 +92,21 @@ const getInfo = async (existingUser, ctx) => {
 •┈┈┈┈•❈••✾••❈•┈┈┈┈•
 Инна лиллаҳи ва инна илайҳи рожиун\n\n<b>Яқинларингизга ҳам улашинг!</b>\nЭълон бериш 👉 @janozachustbot \nОбуна бўлинг 👉 @janozachust
 `,
-          { parse_mode: "html" }
+          { parse_mode: "HTML" }
         );
         ctx.replyWithHTML(
           "<b>✅ Раҳмат! Маълумотингиз тез орада @janozachust каналига жойлаштирилади. \n\nИложи бўлса @janoza_info_bot админига 📍локатция юборинг. Эълон бўйича ўзгаришлар бўлса ҳам админга ёзинг.</b> \n\n<i>Aллоҳ ўтканларни рахматига олсин, яқинларига сабр-у жамил ато қилсин!</i>"
         );
 
-        // await ctx.telegram.sendMessage(
-        //   process.env.SENDER_TO_CHANEL,
-        //   `${customUsername}`,
-        //   {
-        //     parse_mode: "Markdown",
-        //   }
-        // );
+        await ctx.telegram.sendMessage(
+          process.env.SENDER_TO_CHANEL,
+          `${customUsername}`,
+          {
+            parse_mode: "Markdown",
+          }
+        );
 
-        await personModel.findOneAndDelete({ id: existingUser._id });
+        await personModel.findOneAndDelete({ id: existingUser.id });
         break;
 
       default:
